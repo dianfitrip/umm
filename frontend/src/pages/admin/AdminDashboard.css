@@ -1,0 +1,164 @@
+/* Lokasi: frontend/src/admin/AdminDashboard.css */
+.admin-layout {
+  display: flex;
+  background-color: #FFFFFF; /* Sesuai Request Background Putih */
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF; /* Background Putih */
+}
+
+.top-header {
+  height: 70px;
+  background-color: #FFFFFF;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #E0E0E0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.top-header h3 {
+  margin: 0;
+  color: #000000; /* Text Utama */
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.welcome-text {
+  color: #3A3A3A; /* Text Sekunder */
+  font-size: 14px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  background-color: #FF8A00; /* PRIMARY COLOR */
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.content-area {
+  padding: 32px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.placeholder-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  border: 2px dashed #E0E0E0;
+  border-radius: 8px;
+  color: #3A3A3A;
+  background: #FAFAFA;
+}a.admin-layout {
+  display: flex;
+  background-color: #FFFFFF; /* Background Bersih */
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Lebar Sidebar */
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+
+.top-header {
+  height: 70px;
+  background-color: #FFFFFF;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #E0E0E0;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.top-header h3 {
+  margin: 0;
+  color: #000000; /* Text Utama */
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-info {
+  text-align: right;
+}
+
+.admin-info .name {
+  display: block;
+  font-weight: 700;
+  font-size: 14px;
+  color: #000000;
+}
+
+.admin-info .role {
+  display: block;
+  font-size: 11px;
+  color: #FF8A00; /* Aksen Orange pada Role */
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #FF8A00; /* Primary */
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 2px 6px rgba(255, 138, 0, 0.3);
+}
+
+.content-area {
+  padding: 32px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.placeholder {
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #E0E0E0;
+  border-radius: 10px;
+  color: #888;
+  background-color: #FAFAFA;
+}
