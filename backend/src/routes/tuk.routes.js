@@ -6,7 +6,8 @@ const roleMiddleware = require("../middlewares/role.middleware");
 const profileController = require("../controllers/tuk/profile.controller");
 const jadwalController = require("../controllers/tuk/jadwal.controller");
 
-router.use(authMiddleware, roleMiddleware.tukOnly);
+// PERBAIKAN DI SINI: Tambahkan .authenticate
+router.use(authMiddleware.authenticate, roleMiddleware.tukOnly);
 
 router.get("/profile", profileController.getProfile);
 router.put("/profile", profileController.updateProfile);

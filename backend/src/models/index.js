@@ -22,8 +22,16 @@ const DokumenMutu = require("./dokumenMutu.model");
 const PesertaJadwal = require("./pesertaJadwal.model");
 const Jadwal = require("./jadwal.model");
 
-Role.hasMany(User, { foreignKey: "id_role" });
-User.belongsTo(Role, { foreignKey: "id_role" });
+// =========================================================================
+// PERBAIKAN: RELASI ROLE DIMATIKAN
+// =========================================================================
+// Relasi ini dimatikan karena tabel User menggunakan kolom 'role' (ENUM).
+// Jika diaktifkan, Sequelize akan bingung membedakan antara kolom 'role'
+// dan relasi 'role', menyebabkan error "Naming collision".
+// -------------------------------------------------------------------------
+// Role.hasMany(User, { foreignKey: "id_role" });
+// User.belongsTo(Role, { foreignKey: "id_role" });
+// =========================================================================
 
 User.hasOne(ProfileAsesi, { foreignKey: "id_user" });
 User.hasOne(ProfileAsesor, { foreignKey: "id_user" });

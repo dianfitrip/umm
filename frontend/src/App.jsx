@@ -1,31 +1,19 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+// import "./App.css";  <-- Hapus atau jadikan komentar
+import "./index.css"; // Pastikan file css global (biasanya index.css) tetap ada jika dibutuhkan
 
-
-// --- IMPORT COMPONENTS ---
-// Sesuaikan path ini dengan struktur folder 'frontend/src/pages/...' yang sebenarnya
-
-// Public Pages
 import Login from "./pages/public/Login";
-// Asumsi: File Registration.jsx adalah PendaftaranAsesi
+import LoginAdmin from "./pages/auth/LoginAdmin";
 import PendaftaranAsesi from "./pages/public/Registration"; 
-
-// Admin Pages
 import AdminDashboard from "./pages/admin/AdminDashboard";
-
-// Asesi Pages
-// Note: Jika folder 'asesi' belum ada, pastikan Anda membuatnya atau arahkan ke komponen yang benar
-// Jika belum ada, Anda bisa sementara mengarahkannya ke Profile atau komponen placeholder
-import DashboardAsesi from "./pages/public/Profile"; // Placeholder sementara jika DashboardAsesi belum dibuat
+import DashboardAsesi from "./pages/public/Profile";
 
 function App() {
-  // Cek token untuk proteksi route
   const isAuthenticated = () => {
-    // Anda mungkin perlu logika yang lebih spesifik (misal cek role user vs admin)
     return localStorage.getItem("token") !== null;
   };
 
-  // Komponen Protected Route Wrapper
   const ProtectedRoute = ({ children }) => {
     if (!isAuthenticated()) {
       return <Navigate to="/login" replace />;
@@ -36,13 +24,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* --- ROUTE PUBLIC --- */}
+        {/* --- PUBLIC ROUTES --- */}
         <Route path="/login" element={<Login />} />
         
-        {/* Mengganti path /register menjadi /pendaftaran */}
+        {/* --- ADMIN LOGIN ROUTE --- */}
+        <Route path="/admin/login" element={<LoginAdmin />} /> 
+
         <Route path="/pendaftaran" element={<PendaftaranAsesi />} />
 
-        {/* --- ROUTE ADMIN --- */}
+        {/* --- PROTECTED ROUTES --- */}
         <Route 
           path="/admin/dashboard" 
           element={
@@ -52,7 +42,6 @@ function App() {
           } 
         />
 
-        {/* --- ROUTE ASESI --- */}
         <Route
           path="/dashboard/*"
           element={
@@ -62,15 +51,9 @@ function App() {
           }
         />
 
-        {/* --- REDIRECTS & 404 --- */}
-        {/* Redirect root ke login */}
-        <Route
-          path="/"
-          element={<Navigate to="/login" replace />}
-        />
-
-        {/* 404 Page */}
-        <Route path="*" element={<div className="text-center mt-10">Halaman tidak ditemukan (404)</div>} />
+        {/* --- REDIRECTS --- */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<div className="text-center mt-10">404 Not Found</div>} />
       </Routes>
     </Router>
   );

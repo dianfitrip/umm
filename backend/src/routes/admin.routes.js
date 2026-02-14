@@ -20,14 +20,16 @@ const bandingController = require("../controllers/admin/banding.controller");
 const dokumenMutuController = require("../controllers/admin/dokumenMutu.controller");
 const pesertaJadwalController = require("../controllers/admin/pesertaJadwal.controller");
 
+// --- PROTEKSI SEMUA ROUTE DI BAWAH INI ---
+// Error sebelumnya terjadi di sini karena kurang '.authenticate'
+router.use(authMiddleware.authenticate, roleMiddleware.adminOnly);
+// -----------------------------------------
+
 router.get("/profile", adminProfile.getProfile);
 router.put("/profile", adminProfile.updateProfile);
 
-
 router.post("/asesor", asesorAdmin.createAsesor);
 router.post("/tuk-akun", tukAdmin.createTuk);
-
-router.use(authMiddleware, roleMiddleware.adminOnly);
 
 router.get("/dashboard", adminController.getDashboard);
 
@@ -98,6 +100,5 @@ router.get(
   "/jadwal/:id_jadwal/peserta",
   pesertaJadwalController.getPesertaByJadwal
 );
-
 
 module.exports = router;

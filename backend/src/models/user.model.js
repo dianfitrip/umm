@@ -1,38 +1,71 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/database");
+const db = require("../config/database");
+const bcrypt = require("bcryptjs"); // Pastikan library ini ada
 
-const User = sequelize.define("users", {
-  id_user: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+const User = db.define(
+  "User",
+  {
+    id_user: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nama: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM("admin", "asesor", "asesi", "tuk"),
+      defaultValue: "asesi",
+    },
+    is_active: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    profile_picture: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
-  username: {
-    type: DataTypes.STRING(50),
-    unique: true
-  },
-  password_hash: {
-    type: DataTypes.STRING(255)
-  },
-  id_role: {
-    type: DataTypes.INTEGER
-  },
-  email: {
-    type: DataTypes.STRING(100)
-  },
-  no_hp: {
-    type: DataTypes.STRING(15)
-  },
-  status_user: {
-    type: DataTypes.ENUM("aktif", "nonaktif"),
-    defaultValue: "aktif"
-  },
-  created_at: {
-    type: DataTypes.DATE
+  {
+    tableName: "users",
+    timestamps: true, // Sesuai dengan created_at dan updated_at di SQL Anda
+    hooks: {
+      // Enkripsi password sebelum disimpan (Register)
+      beforeCreate: async (user) => {
+        if (user.password) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+      // Enkripsi password jika diubah (Update Profile)
+      beforeUpdate: async (user) => {
+        if (user.changed("password")) {
+          const salt = await bcrypt.genSalt(10);
+          user.password = await bcrypt.hash(user.password, salt);
+        }
+      },
+    },
   }
-}, {
-  tableName: "users",
-  timestamps: false
-});
+);
+
+// =================================================================
+// BAGIAN PENTING INI YANG SEBELUMNYA HILANG:
+// =================================================================
+User.prototype.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 module.exports = User;
