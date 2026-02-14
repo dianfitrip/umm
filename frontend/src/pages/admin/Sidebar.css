@@ -1,13 +1,28 @@
+/* Variabel Warna untuk Konsistensi */
+:root {
+  --primary-orange: #FF8A00;
+  --primary-orange-light: #FFF8F0;
+  --text-dark: #333333;
+  --text-muted: #757575;
+  --sidebar-bg: #FFFFFF;
+  --border-color: #ECECEC;
+  --danger-red: #DC2626;
+  --danger-red-light: #FEF2F2;
+}
+
 .sidebar {
   width: 260px;
   height: 100vh;
-  background-color: #FFFFFF; /* Background Putih */
-  border-right: 1px solid #E0E0E0;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   position: fixed;
   left: 0;
   top: 0;
+  z-index: 1000;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04); /* Tambah shadow halus */
+  transition: all 0.3s ease;
 }
 
 .sidebar-header {
@@ -15,40 +30,53 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 1px solid #F5F5F5;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .logo-box {
-  width: 40px;
-  height: 40px;
-  background-color: #FF8A00; /* Primary Color */
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--primary-orange), #FF6A00); /* Gradient Oranye */
   color: #FFFFFF;
-  border-radius: 8px;
+  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 20px;
+  font-size: 22px;
+  box-shadow: 0 4px 8px rgba(255, 138, 0, 0.3);
 }
 
 .logo-text h1 {
   font-size: 16px;
   margin: 0;
-  color: #000000; /* Text Utama */
-  font-weight: 800;
+  color: var(--text-dark);
+  font-weight: 700;
   letter-spacing: 0.5px;
 }
 
 .logo-text p {
   font-size: 12px;
-  color: #3A3A3A; /* Text Sekunder */
+  color: var(--text-muted);
   margin: 0;
+  font-weight: 500;
 }
 
 .sidebar-nav {
   flex: 1;
-  padding: 20px 16px;
+  padding: 24px 16px;
   overflow-y: auto;
+}
+
+/* Label kecil untuk pemisah section menu */
+.nav-section-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-left: 12px;
 }
 
 .nav-item {
@@ -57,45 +85,54 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
   background: none;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px; /* Sedikit lebih bulat */
   cursor: pointer;
-  color: #3A3A3A; /* Text Sekunder */
-  transition: all 0.2s;
+  color: var(--text-muted);
+  transition: all 0.2s ease-in-out;
+  text-align: left;
+  font-family: inherit; /* Pastikan font sama */
+}
+
+.nav-item:hover {
+  background-color: var(--primary-orange-light);
+  color: var(--primary-orange);
+}
+
+.nav-item.active {
+  background-color: var(--primary-orange);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.25);
+}
+
+.nav-item .icon {
+  font-size: 18px; /* Ukuran ikon react-icons */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+}
+
+.nav-item .label {
   font-size: 14px;
   font-weight: 500;
 }
 
-.nav-item:hover {
-  background-color: #FFF8F0; /* Orange sangat pudar */
-  color: #FF8A00;
-}
-
-.nav-item.active {
-  background-color: #FF8A00; /* Primary Active */
-  color: #FFFFFF;
-  box-shadow: 0 4px 10px rgba(255, 138, 0, 0.2);
-}
-
 .sidebar-footer {
-  padding: 16px;
-  border-top: 1px solid #F5F5F5;
+  padding: 20px 16px;
+  border-top: 1px solid var(--border-color);
+  background-color: #F9FAFB; /* Warna footer sedikit berbeda */
 }
 
-.logout-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #FFFFFF;
-  border: 1px solid #FFE0E0;
-  color: #D32F2F;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.2s;
+.nav-item.logout {
+  color: var(--danger-red);
+  margin-bottom: 0;
 }
 
-.logout-btn:hover {
-  background-color: #FFF0F0;
+.nav-item.logout:hover {
+  background-color: var(--danger-red-light);
+  color: var(--danger-red);
 }

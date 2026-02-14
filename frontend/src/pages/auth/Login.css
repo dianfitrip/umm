@@ -1,0 +1,186 @@
+/* Variabel Warna */
+:root {
+  --lsp-blue: #1e3a8a;       
+  --lsp-blue-dark: #172554;
+  --lsp-orange: #f97316;     
+  --lsp-orange-hover: #ea580c;
+  --bg-color: #f1f5f9;       
+  --text-primary: #334155;
+  --text-secondary: #64748b;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 24px 24px;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  width: 100%;
+  max-width: 384px; 
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-top: 6px solid var(--lsp-orange);
+  box-sizing: border-box;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.login-title {
+  color: var(--lsp-blue);
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  color: var(--text-secondary);
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+
+.input-group {
+  margin-bottom: 18px;
+  width: 100%;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  color: var(--text-primary);
+}
+
+.form-input:focus {
+  border-color: var(--lsp-orange);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.15);
+}
+
+.recaptcha-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(to right, var(--lsp-orange), var(--lsp-orange-hover));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(249, 115, 22, 0.3);
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(to right, var(--lsp-orange-hover), #c2410c);
+  box-shadow: 0 10px 15px -3px rgba(249, 115, 22, 0.4);
+}
+
+.btn-login:disabled {
+  background: #cbd5e1;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.login-alert {
+  background-color: #fff7ed;
+  color: #c2410c;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid #fdba74;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  border-top: 1px solid #f1f5f9;
+  padding-top: 20px;
+}
+
+.login-footer a {
+  color: var(--lsp-orange);
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.login-footer a:hover {
+  color: var(--lsp-blue);
+  text-decoration: underline;
+}
+
+/* --- FITUR SHOW/HIDE PASSWORD (NEW) --- */
+
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+/* Beri padding kanan lebih agar teks tidak menabrak ikon */
+.password-input {
+  padding-right: 45px; 
+}
+
+/* Tombol Mata */
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary); /* Warna default abu-abu */
+  z-index: 5;
+}
+
+.toggle-password:hover {
+  color: var(--lsp-orange); /* Berubah oranye saat di-hover */
+}
+
+.toggle-password:focus {
+  outline: none;
+}
