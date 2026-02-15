@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import './AdminDashboard.css';
 import {
@@ -10,12 +11,10 @@ import {
   FaCalendarAlt
 } from "react-icons/fa";
 
-// --- SUB-COMPONENT: KONTEN DASHBOARD ---
+// --- KOMPONEN: DASHBOARD OVERVIEW (RESUME & STATISTIK) ---
 const DashboardOverview = () => {
-  // Ambil tahun secara otomatis
   const currentYear = new Date().getFullYear();
 
-  // Data Statistik (Resume)
   const stats = [
     { label: "Total Skema", value: "12", icon: <FaLayerGroup />, color: "orange" },
     { label: "Total Asesor", value: "45", icon: <FaUserTie />, color: "blue" },
@@ -23,7 +22,6 @@ const DashboardOverview = () => {
     { label: "Data TUK", value: "8", icon: <FaBuilding />, color: "purple" },
   ];
 
-  // Data Dummy untuk Tabel
   const recentRegistrations = [
     { name: "Budi Santoso", schema: "Pemrograman Web", date: "16 Feb 2026", status: "Menunggu" },
     { name: "Siti Aminah", schema: "Desain Grafis", date: "16 Feb 2026", status: "Verifikasi" },
@@ -34,8 +32,7 @@ const DashboardOverview = () => {
 
   return (
     <div className="dashboard-container">
-      
-      {/* 1. STATS CARDS (RESUME) - Dikembalikan tanpa badge +5% */}
+      {/* 1. STATS CARDS */}
       <div className="stats-grid">
         {stats.map((item, index) => (
           <div className="stat-card" key={index}>
@@ -46,18 +43,14 @@ const DashboardOverview = () => {
               <h3>{item.value}</h3>
               <p>{item.label}</p>
             </div>
-            {/* Bagian Trend (+5%) sudah dihapus di sini */}
           </div>
         ))}
       </div>
 
-      {/* 2. CHARTS SECTION */}
+      {/* 2. CHARTS */}
       <div className="charts-grid">
-        
-        {/* Chart 1: Pendaftar & Kandidat (Judul Dinamis) */}
         <div className="card-box">
           <div className="card-header-inner">
-            {/* TAHUN OTOMATIS BERUBAH */}
             <h4>Pendaftar dan Kandidat Tahun {currentYear}</h4>
             <button className="btn-icon-small"><FaEllipsisV /></button>
           </div>
@@ -85,7 +78,6 @@ const DashboardOverview = () => {
           </div>
         </div>
 
-        {/* Chart 2: Persentase Kelulusan */}
         <div className="card-box">
           <div className="card-header-inner">
             <h4>Persentase Kelulusan</h4>
@@ -108,7 +100,6 @@ const DashboardOverview = () => {
 
       {/* 3. TABLE & SCHEDULE */}
       <div className="bottom-grid">
-        {/* Table Registrasi */}
         <div className="card-box table-section">
           <div className="card-header-inner">
             <h4>Pendaftaran Terbaru</h4>
@@ -138,7 +129,6 @@ const DashboardOverview = () => {
           </table>
         </div>
 
-        {/* Jadwal Terdekat */}
         <div className="card-box schedule-section">
           <div className="card-header-inner">
             <h4>Jadwal Asesmen</h4>
@@ -175,17 +165,17 @@ const DashboardOverview = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
 
-// --- MAIN COMPONENT: ADMIN DASHBOARD ---
+// --- KOMPONEN UTAMA: ADMIN DASHBOARD (LAYOUT) ---
 const AdminDashboard = () => {
-  const [activeMenu, setActiveMenu] = useState('dashboard');
+  const navigate = useNavigate();
+  const location = useLocation();
   const [userData, setUserData] = useState({ name: 'Admin', role: 'Administrator' });
 
-  // Ambil data user dari LocalStorage saat component dimuat
+  // 1. Ambil Data User
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
@@ -201,48 +191,39 @@ const AdminDashboard = () => {
     }
   }, []);
 
-  const renderContent = () => {
-    switch (activeMenu) {
-      case 'dashboard':
-        return <DashboardOverview />;
-      case 'verifikasi':
-        return <div className="p-6"><h2>Halaman Verifikasi</h2></div>;
-      case 'skema':
-        return <div className="p-6"><h2>Halaman Skema</h2></div>;
-      case 'asesor':
-        return <div className="p-6"><h2>Halaman Asesor</h2></div>;
-      case 'profile':
-        return <div className="p-6"><h2>Profil Admin</h2><p>Halaman pengaturan profil admin.</p></div>;
-      default:
-        return (
-          <div className="empty-state">
-            <h2>{activeMenu.replace('-', ' ').toUpperCase()}</h2>
-            <p>Halaman ini sedang dalam pengembangan.</p>
-          </div>
-        );
-    }
+  // 2. Tentukan Judul Berdasarkan URL
+  const getPageTitle = () => {
+    const path = location.pathname;
+    if (path.includes('/dashboard')) return 'Dashboard Overview';
+    if (path.includes('/verifikasi-pendaftaran')) return 'Verifikasi Pendaftaran';
+    if (path.includes('/profile')) return 'Profil Admin';
+    if (path.includes('/skema')) return 'Manajemen Skema';
+    // Default formatting
+    const raw = path.split('/').pop();
+    return raw.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
+
+  // 3. Cek apakah user sedang di halaman Dashboard Home
+  const isDashboardHome = location.pathname === '/admin/dashboard' || location.pathname === '/admin';
 
   return (
     <div className="admin-layout">
-      <Sidebar activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      {/* SIDEBAR NAVIGATION */}
+      <Sidebar />
       
       <main className="main-content">
         {/* TOP HEADER */}
         <header className="top-header">
           <div className="header-title">
-            <h3>{activeMenu === 'dashboard' ? 'Dashboard Overview' : activeMenu.replace(/-/g, ' ').toUpperCase()}</h3>
+            <h3>{getPageTitle()}</h3>
             <p className="subtitle">Selamat datang kembali, {userData.name}.</p>
           </div>
           
           <div className="header-actions">
-            
-            {/* BUTTON NOTIFIKASI LONCENG SUDAH DIHAPUS */}
-            
-            {/* USER PROFILE - KLIK UNTUK KE HALAMAN PROFILE */}
+            {/* PROFILE CLICKABLE -> MENUJU HALAMAN PROFILE */}
             <div 
               className="user-profile clickable" 
-              onClick={() => setActiveMenu('profile')}
+              onClick={() => navigate('/admin/profile')}
               title="Lihat Profil"
               style={{ cursor: 'pointer' }}
             >
@@ -257,9 +238,10 @@ const AdminDashboard = () => {
           </div>
         </header>
 
-        {/* DYNAMIC CONTENT */}
+        {/* DYNAMIC CONTENT AREA */}
         <div className="content-area">
-           {renderContent()}
+           {/* Jika URL Dashboard -> Tampilkan Statistik. Jika Bukan -> Tampilkan Outlet (Halaman Lain) */}
+           {isDashboardHome ? <DashboardOverview /> : <Outlet />}
         </div>
       </main>
     </div>

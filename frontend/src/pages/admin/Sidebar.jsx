@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./Sidebar.css";
 import {
   FaHome, FaBullhorn, FaGavel, FaChartBar, FaUniversity, FaBook, FaAward, 
@@ -9,9 +9,11 @@ import {
   FaChevronDown, FaChevronRight
 } from "react-icons/fa";
 
-const Sidebar = ({ activeMenu, setActiveMenu }) => {
+const Sidebar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
+  // State untuk Dropdown Menu (Toggle)
   const [openMenus, setOpenMenus] = useState({
     laporan: false,
     standar: false,
@@ -28,9 +30,13 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
     setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleMenuClick = (key) => {
-    setActiveMenu(key);
-    // navigate(`/admin/${key}`);
+  // Helper: Cek apakah menu aktif berdasarkan URL
+  // Menggunakan 'includes' agar sub-halaman tetap membuat induknya aktif
+  const isActive = (path) => location.pathname.includes(path);
+
+  // Helper: Navigasi
+  const handleNav = (path) => {
+    navigate(path);
   };
 
   return (
@@ -52,18 +58,21 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         {/* UTAMA */}
         <div className="nav-section-label">Utama</div>
         
-        <button className={`nav-item ${activeMenu === 'dashboard' ? 'active' : ''}`} onClick={() => handleMenuClick('dashboard')}>
+        <button 
+          className={`nav-item ${isActive('/admin/dashboard') ? 'active' : ''}`} 
+          onClick={() => handleNav('/admin/dashboard')}
+        >
           <div className="nav-icon"><FaHome /></div>
           <span className="nav-label">Home / Dashboard</span>
         </button>
 
         {/* LAYANAN */}
-        <button className={`nav-item ${activeMenu === 'pengaduan' ? 'active' : ''}`} onClick={() => handleMenuClick('pengaduan')}>
+        <button className={`nav-item ${isActive('/admin/pengaduan') ? 'active' : ''}`} onClick={() => handleNav('/admin/pengaduan')}>
           <div className="nav-icon"><FaBullhorn /></div>
           <span className="nav-label">Layanan Pengaduan</span>
         </button>
 
-        <button className={`nav-item ${activeMenu === 'banding' ? 'active' : ''}`} onClick={() => handleMenuClick('banding')}>
+        <button className={`nav-item ${isActive('/admin/banding') ? 'active' : ''}`} onClick={() => handleNav('/admin/banding')}>
           <div className="nav-icon"><FaGavel /></div>
           <span className="nav-label">Layanan Banding</span>
         </button>
@@ -77,23 +86,23 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.laporan && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('laporan-umum')}><span className="dot"></span> Laporan Umum</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('laporan-bulanan')}><span className="dot"></span> Laporan Bulanan</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('laporan-tahunan')}><span className="dot"></span> Laporan Tahunan</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('kinerja-asesor')}><span className="dot"></span> Kinerja Asesor</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('kinerja-tuk')}><span className="dot"></span> Kinerja TUK</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('feedback')}><span className="dot"></span> Umpan Balik</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/umum') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/umum')}><span className="dot"></span> Laporan Umum</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/bulanan') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/bulanan')}><span className="dot"></span> Laporan Bulanan</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/tahunan') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/tahunan')}><span className="dot"></span> Laporan Tahunan</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/kinerja-asesor') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/kinerja-asesor')}><span className="dot"></span> Kinerja Asesor</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/kinerja-tuk') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/kinerja-tuk')}><span className="dot"></span> Kinerja TUK</button>
+            <button className={`submenu-item ${isActive('/admin/laporan/feedback') ? 'active' : ''}`} onClick={() => handleNav('/admin/laporan/feedback')}><span className="dot"></span> Umpan Balik</button>
           </div>
         )}
 
         {/* MASTER DATA */}
         <div className="nav-section-label">Master Data</div>
-        <button className={`nav-item ${activeMenu === 'profil-lsp' ? 'active' : ''}`} onClick={() => handleMenuClick('profil-lsp')}>
+        <button className={`nav-item ${isActive('/admin/profil-lsp') ? 'active' : ''}`} onClick={() => handleNav('/admin/profil-lsp')}>
           <div className="nav-icon"><FaUniversity /></div>
           <span className="nav-label">Profil LSP</span>
         </button>
 
-        <button className={`nav-item ${activeMenu === 'dokumen-mutu' ? 'active' : ''}`} onClick={() => handleMenuClick('dokumen-mutu')}>
+        <button className={`nav-item ${isActive('/admin/dokumen-mutu') ? 'active' : ''}`} onClick={() => handleNav('/admin/dokumen-mutu')}>
           <div className="nav-icon"><FaBook /></div>
           <span className="nav-label">Dokumen Mutu</span>
         </button>
@@ -105,12 +114,12 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.standar && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('unit-kompetensi')}><span className="dot"></span> Unit Kompetensi</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('skkni')}><span className="dot"></span> Data SKKNI</button>
+            <button className={`submenu-item ${isActive('/admin/unit-kompetensi') ? 'active' : ''}`} onClick={() => handleNav('/admin/unit-kompetensi')}><span className="dot"></span> Unit Kompetensi</button>
+            <button className={`submenu-item ${isActive('/admin/skkni') ? 'active' : ''}`} onClick={() => handleNav('/admin/skkni')}><span className="dot"></span> Data SKKNI</button>
           </div>
         )}
 
-        <button className={`nav-item ${activeMenu === 'skema' ? 'active' : ''}`} onClick={() => handleMenuClick('skema')}>
+        <button className={`nav-item ${isActive('/admin/skema') ? 'active' : ''}`} onClick={() => handleNav('/admin/skema')}>
           <div className="nav-icon"><FaLayerGroup /></div>
           <span className="nav-label">Skema Sertifikasi</span>
         </button>
@@ -122,8 +131,8 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.biaya && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('rekening')}><span className="dot"></span> Rekening Bank</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('data-biaya')}><span className="dot"></span> Komponen Biaya</button>
+            <button className={`submenu-item ${isActive('/admin/biaya/rekening') ? 'active' : ''}`} onClick={() => handleNav('/admin/biaya/rekening')}><span className="dot"></span> Rekening Bank</button>
+            <button className={`submenu-item ${isActive('/admin/biaya/komponen') ? 'active' : ''}`} onClick={() => handleNav('/admin/biaya/komponen')}><span className="dot"></span> Komponen Biaya</button>
           </div>
         )}
 
@@ -137,13 +146,13 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.event && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('cari-jadwal')}><span className="dot"></span> Cari Jadwal</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('event-uji')}><span className="dot"></span> Event Uji Kompetensi</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('arsip-jadwal')}><span className="dot"></span> Arsip Jadwal</button>
+            <button className={`submenu-item ${isActive('/admin/jadwal/cari') ? 'active' : ''}`} onClick={() => handleNav('/admin/jadwal/cari')}><span className="dot"></span> Cari Jadwal</button>
+            <button className={`submenu-item ${isActive('/admin/jadwal/event-uji') ? 'active' : ''}`} onClick={() => handleNav('/admin/jadwal/event-uji')}><span className="dot"></span> Event Uji Kompetensi</button>
+            <button className={`submenu-item ${isActive('/admin/jadwal/arsip') ? 'active' : ''}`} onClick={() => handleNav('/admin/jadwal/arsip')}><span className="dot"></span> Arsip Jadwal</button>
           </div>
         )}
 
-        <button className={`nav-item ${activeMenu === 'tuk' ? 'active' : ''}`} onClick={() => handleMenuClick('tuk')}>
+        <button className={`nav-item ${isActive('/admin/tuk') ? 'active' : ''}`} onClick={() => handleNav('/admin/tuk')}>
           <div className="nav-icon"><FaBuilding /></div>
           <span className="nav-label">Tempat Uji (TUK)</span>
         </button>
@@ -155,13 +164,16 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.asesi && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-cari')}><span className="dot"></span> Pencarian Asesi</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-baru')}><span className="dot"></span> Pendaftar Baru</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-terjadwal')}><span className="dot"></span> Terjadwal</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-kompeten')}><span className="dot"></span> Kompeten</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-belum-sertifikat')}><span className="dot"></span> Belum Sertifikat</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-arsip')}><span className="dot"></span> Arsip</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesi-blokir')}><span className="dot"></span> Diblokir</button>
+            <button className={`submenu-item ${isActive('/admin/asesi/cari') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/cari')}><span className="dot"></span> Pencarian Asesi</button>
+            
+            {/* LINK KE HALAMAN VERIFIKASI SESUAI PERMINTAAN */}
+            <button className={`submenu-item ${isActive('/admin/verifikasi-pendaftaran') ? 'active' : ''}`} onClick={() => handleNav('/admin/verifikasi-pendaftaran')}><span className="dot"></span> Pendaftar Baru</button>
+            
+            <button className={`submenu-item ${isActive('/admin/asesi/terjadwal') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/terjadwal')}><span className="dot"></span> Terjadwal</button>
+            <button className={`submenu-item ${isActive('/admin/asesi/kompeten') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/kompeten')}><span className="dot"></span> Kompeten</button>
+            <button className={`submenu-item ${isActive('/admin/asesi/belum-sertifikat') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/belum-sertifikat')}><span className="dot"></span> Belum Sertifikat</button>
+            <button className={`submenu-item ${isActive('/admin/asesi/arsip') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/arsip')}><span className="dot"></span> Arsip</button>
+            <button className={`submenu-item ${isActive('/admin/asesi/blokir') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesi/blokir')}><span className="dot"></span> Diblokir</button>
           </div>
         )}
 
@@ -172,12 +184,12 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.asesor && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('asesor-list')}><span className="dot"></span> Daftar Asesor</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('asesor-statistik')}><span className="dot"></span> Statistik Wilayah</button>
+            <button className={`submenu-item ${isActive('/admin/asesor/list') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesor/list')}><span className="dot"></span> Daftar Asesor</button>
+            <button className={`submenu-item ${isActive('/admin/asesor/statistik') ? 'active' : ''}`} onClick={() => handleNav('/admin/asesor/statistik')}><span className="dot"></span> Statistik Wilayah</button>
           </div>
         )}
 
-        <button className={`nav-item ${activeMenu === 'komite' ? 'active' : ''}`} onClick={() => handleMenuClick('komite')}>
+        <button className={`nav-item ${isActive('/admin/komite') ? 'active' : ''}`} onClick={() => handleNav('/admin/komite')}>
           <div className="nav-icon"><FaUsersCog /></div>
           <span className="nav-label">Komite Teknis</span>
         </button>
@@ -185,12 +197,12 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         {/* SISTEM & WEB */}
         <div className="nav-section-label">Sistem & Web</div>
         
-        <button className={`nav-item ${activeMenu === 'notifikasi' ? 'active' : ''}`} onClick={() => handleMenuClick('notifikasi')}>
+        <button className={`nav-item ${isActive('/admin/notifikasi') ? 'active' : ''}`} onClick={() => handleNav('/admin/notifikasi')}>
           <div className="nav-icon"><FaCommentDots /></div>
           <span className="nav-label">SMS / Notifikasi</span>
         </button>
 
-        <button className={`nav-item ${activeMenu === 'website' ? 'active' : ''}`} onClick={() => handleMenuClick('website')}>
+        <button className={`nav-item ${isActive('/admin/website') ? 'active' : ''}`} onClick={() => handleNav('/admin/website')}>
           <div className="nav-icon"><FaGlobe /></div>
           <span className="nav-label">Konten Website</span>
         </button>
@@ -202,17 +214,17 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.manajemen && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('manajemen-user')}><span className="dot"></span> Users</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('manajemen-pengusul')}><span className="dot"></span> Pengusul</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('manajemen-wa')}><span className="dot"></span> WhatsApp API</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('manajemen-bnsp')}><span className="dot"></span> Integrasi BNSP</button>
+            <button className={`submenu-item ${isActive('/admin/manajemen/users') ? 'active' : ''}`} onClick={() => handleNav('/admin/manajemen/users')}><span className="dot"></span> Users</button>
+            <button className={`submenu-item ${isActive('/admin/manajemen/pengusul') ? 'active' : ''}`} onClick={() => handleNav('/admin/manajemen/pengusul')}><span className="dot"></span> Pengusul</button>
+            <button className={`submenu-item ${isActive('/admin/manajemen/wa') ? 'active' : ''}`} onClick={() => handleNav('/admin/manajemen/wa')}><span className="dot"></span> WhatsApp API</button>
+            <button className={`submenu-item ${isActive('/admin/manajemen/bnsp') ? 'active' : ''}`} onClick={() => handleNav('/admin/manajemen/bnsp')}><span className="dot"></span> Integrasi BNSP</button>
           </div>
         )}
 
         {/* KEUANGAN & ADMIN */}
         <div className="nav-section-label">Keuangan & Admin</div>
 
-        <button className={`nav-item ${activeMenu === 'keuangan' ? 'active' : ''}`} onClick={() => handleMenuClick('keuangan')}>
+        <button className={`nav-item ${isActive('/admin/keuangan') ? 'active' : ''}`} onClick={() => handleNav('/admin/keuangan')}>
           <div className="nav-icon"><FaCalculator /></div>
           <span className="nav-label">Keuangan</span>
         </button>
@@ -224,9 +236,9 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.pembayaran && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('bayar-cari')}><span className="dot"></span> Cari Pembayaran</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('bayar-validasi')}><span className="dot"></span> Validasi</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('bayar-lunas')}><span className="dot"></span> Tervalidasi</button>
+            <button className={`submenu-item ${isActive('/admin/pembayaran/cari') ? 'active' : ''}`} onClick={() => handleNav('/admin/pembayaran/cari')}><span className="dot"></span> Cari Pembayaran</button>
+            <button className={`submenu-item ${isActive('/admin/pembayaran/validasi') ? 'active' : ''}`} onClick={() => handleNav('/admin/pembayaran/validasi')}><span className="dot"></span> Validasi</button>
+            <button className={`submenu-item ${isActive('/admin/pembayaran/lunas') ? 'active' : ''}`} onClick={() => handleNav('/admin/pembayaran/lunas')}><span className="dot"></span> Tervalidasi</button>
           </div>
         )}
 
@@ -237,21 +249,21 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </button>
         {openMenus.persuratan && (
           <div className="submenu">
-            <button className="submenu-item" onClick={() => handleMenuClick('surat-sk')}><span className="dot"></span> SK & Tugas</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('surat-masuk')}><span className="dot"></span> Surat Masuk</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('surat-keluar')}><span className="dot"></span> Surat Keluar</button>
-            <button className="submenu-item" onClick={() => handleMenuClick('surat-mou')}><span className="dot"></span> MoU / MoA</button>
+            <button className={`submenu-item ${isActive('/admin/surat/sk') ? 'active' : ''}`} onClick={() => handleNav('/admin/surat/sk')}><span className="dot"></span> SK & Tugas</button>
+            <button className={`submenu-item ${isActive('/admin/surat/masuk') ? 'active' : ''}`} onClick={() => handleNav('/admin/surat/masuk')}><span className="dot"></span> Surat Masuk</button>
+            <button className={`submenu-item ${isActive('/admin/surat/keluar') ? 'active' : ''}`} onClick={() => handleNav('/admin/surat/keluar')}><span className="dot"></span> Surat Keluar</button>
+            <button className={`submenu-item ${isActive('/admin/surat/mou') ? 'active' : ''}`} onClick={() => handleNav('/admin/surat/mou')}><span className="dot"></span> MoU / MoA</button>
           </div>
         )}
 
-        <button className={`nav-item ${activeMenu === 'surveillance' ? 'active' : ''}`} onClick={() => handleMenuClick('surveillance')}>
+        <button className={`nav-item ${isActive('/admin/surveillance') ? 'active' : ''}`} onClick={() => handleNav('/admin/surveillance')}>
           <div className="nav-icon"><FaEye /></div>
           <span className="nav-label">Surveillance</span>
         </button>
 
         {/* ACCOUNT */}
         <div className="nav-section-label">Akun</div>
-        <button className={`nav-item ${activeMenu === 'ubah-sandi' ? 'active' : ''}`} onClick={() => handleMenuClick('ubah-sandi')}>
+        <button className={`nav-item ${isActive('/admin/ubah-sandi') ? 'active' : ''}`} onClick={() => handleNav('/admin/ubah-sandi')}>
           <div className="nav-icon"><FaLock /></div>
           <span className="nav-label">Ubah Sandi</span>
         </button>
@@ -260,7 +272,7 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
 
       {/* FOOTER */}
       <div className="sidebar-footer">
-        <button className="nav-item logout">
+        <button className="nav-item logout" onClick={() => handleNav('/login')}>
           <div className="nav-icon"><FaSignOutAlt /></div>
           <span className="nav-label">Keluar</span>
         </button>
