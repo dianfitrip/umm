@@ -1,43 +1,34 @@
-import React from 'react';
-import './Sidebar.css';
-import { useNavigate } from 'react-router-dom';
-// Import ikon profesional dari react-icons/fa (Font Awesome 5)
-import { 
-  FaThLarge, 
-  FaClipboardCheck, 
-  FaSitemap, 
-  FaUserTie, 
-  FaBuilding, 
-  FaUsers, 
-  FaSignOutAlt 
-} from 'react-icons/fa';
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import "./Sidebar.css";
 
-const Sidebar = ({ activeMenu, setActiveMenu }) => {
+import {
+  FaThLarge,
+  FaUserCheck,
+  FaLayerGroup,
+  FaUserTie,
+  FaBuilding,
+  FaUsers,
+  FaSignOutAlt,
+  FaChevronDown,
+  FaChevronRight
+} from "react-icons/fa";
+
+const Sidebar = () => {
+
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Menu definition dengan komponen Ikon
-  const menus = [
-    { id: 'dashboard', label: 'Dashboard', icon: <FaThLarge /> },
-    { id: 'verifikasi', label: 'Verifikasi Pendaftaran', icon: <FaClipboardCheck /> },
-    { id: 'skema', label: 'Manajemen Skema', icon: <FaSitemap /> },
-    { id: 'asesor', label: 'Data Asesor', icon: <FaUserTie /> },
-    { id: 'tuk', label: 'Data TUK', icon: <FaBuilding /> },
-    { id: 'user', label: 'Manajemen User', icon: <FaUsers /> },
-  ];
+  // dropdown state
+  const [openAsesi, setOpenAsesi] = useState(false);
 
-  const handleLogout = () => {
-    // Tambahkan konfirmasi logout untuk kesan lebih profesional
-    if (window.confirm('Apakah Anda yakin ingin keluar?')) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      navigate('/login');
-    }
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <div className="sidebar">
+
+      {/* HEADER */}
       <div className="sidebar-header">
-        {/* Logo Box menggunakan warna utama oranye */}
         <div className="logo-box">A</div>
         <div className="logo-text">
           <h1>ADMIN PANEL</h1>
@@ -45,26 +36,127 @@ const Sidebar = ({ activeMenu, setActiveMenu }) => {
         </div>
       </div>
 
-      <nav className="sidebar-nav">
-        <div className="nav-section-label">MENU UTAMA</div>
-        {menus.map((menu) => (
-          <button
-            key={menu.id}
-            onClick={() => setActiveMenu(menu.id)}
-            className={`nav-item ${activeMenu === menu.id ? 'active' : ''}`}
-          >
-            <span className="icon">{menu.icon}</span>
-            <span className="label">{menu.label}</span>
-          </button>
-        ))}
-      </nav>
+      {/* NAV */}
+      <div className="sidebar-nav">
 
+        <div className="nav-section-label">Menu Utama</div>
+
+        {/* Dashboard */}
+        <button
+          className={`nav-item ${isActive("/admin/dashboard") ? "active" : ""}`}
+          onClick={() => navigate("/admin/dashboard")}
+        >
+          <span className="icon"><FaThLarge /></span>
+          <span className="label">Dashboard</span>
+        </button>
+
+
+        {/* ===== DROPDOWN ASESI ===== */}
+        <button
+          className="nav-item"
+          onClick={() => setOpenAsesi(!openAsesi)}
+        >
+          <span className="icon"><FaUserCheck /></span>
+          <span className="label">Asesi</span>
+          <span style={{ marginLeft: "auto" }}>
+            {openAsesi ? <FaChevronDown /> : <FaChevronRight />}
+          </span>
+        </button>
+
+        {openAsesi && (
+          <div style={{ paddingLeft: "20px" }}>
+
+            <button
+              className={`nav-item ${isActive("/admin/verifikasi-pendaftaran") ? "active" : ""}`}
+              onClick={() => navigate("/admin/verifikasi-pendaftaran")}
+            >
+              <span className="label">Verifikasi Pendaftaran</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Belum Terjadwal</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Terjadwal</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Pendaftar Tahun Lalu</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Per Tahun Angkatan</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Per Provinsi Asal</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Per Kota/Kab. Asal</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Berdasarkan Pengusul</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Kompeten</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Kompeten (Belum Sertifikat)</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Kompeten (Arsip)</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Belum Kompeten</span>
+            </button>
+
+            <button className="nav-item">
+              <span className="label">Diblokir</span>
+            </button>
+
+          </div>
+        )}
+
+
+        {/* menu lain tetap */}
+        <button className="nav-item">
+          <span className="icon"><FaLayerGroup /></span>
+          <span className="label">Manajemen Skema</span>
+        </button>
+
+        <button className="nav-item">
+          <span className="icon"><FaUserTie /></span>
+          <span className="label">Data Asesor</span>
+        </button>
+
+        <button className="nav-item">
+          <span className="icon"><FaBuilding /></span>
+          <span className="label">Data TUK</span>
+        </button>
+
+        <button className="nav-item">
+          <span className="icon"><FaUsers /></span>
+          <span className="label">Manajemen User</span>
+        </button>
+
+      </div>
+
+
+      {/* FOOTER */}
       <div className="sidebar-footer">
-        <button onClick={handleLogout} className="nav-item logout">
+        <button className="nav-item logout">
           <span className="icon"><FaSignOutAlt /></span>
           <span className="label">Logout</span>
         </button>
       </div>
+
     </div>
   );
 };

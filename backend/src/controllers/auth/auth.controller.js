@@ -1,133 +1,103 @@
 const User = require("../../models/user.model");
+const Role = require("../../models/role.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const env = require("../../config/env");
 
-// --- REGISTER USER (ASESI) ---
-exports.register = async (req, res) => {
-  try {
-    const { nama, email, password } = req.body;
 
-    // Cek email user
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email sudah terdaftar" });
-    }
-
-    // Create User (Role default: user)
-    const newUser = await User.create({
-      nama,
-      email,
-      password, // Password akan di-hash oleh hooks di model
-      role: 'user',
-      is_active: true
-    });
-
-    res.status(201).json({
-      message: "Registrasi berhasil",
-      user: {
-        id: newUser.id_user,
-        nama: newUser.nama,
-        email: newUser.email
-      }
-    });
-
-  } catch (error) {
-    console.error("Register Error:", error);
-    res.status(500).json({ message: "Terjadi kesalahan server", error: error.message });
-  }
-};
-
-// --- REGISTER ADMIN (KHUSUS POSTMAN/SEEDING) ---
+// ================= REGISTER ADMIN =================
 exports.registerAdmin = async (req, res) => {
-  try {
-    const { nama, email, password } = req.body;
 
-    // Cek email
-    const existingUser = await User.findOne({ where: { email } });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email sudah digunakan" });
+  try {
+
+    const { username, email, password, no_hp } = req.body;
+
+    const existingUser = await User.findOne({ where:{ email }});
+
+    if(existingUser){
+      return res.status(400).json({message:"Email sudah ada"});
     }
 
-    // Create User dengan Role ADMIN
-    const newAdmin = await User.create({
-      nama,
+    const hashedPassword = await bcrypt.hash(password,10);
+
+    const newUser = await User.create({
+      username,
       email,
-      password,
-      role: 'admin', // Force role admin
-      is_active: true
+      password_hash:hashedPassword,
+      id_role:1,
+      no_hp:no_hp || null,
+      status_user:"aktif"
     });
 
-    res.status(201).json({
-      message: "Admin berhasil didaftarkan",
-      data: {
-        id: newAdmin.id_user,
-        nama: newAdmin.nama,
-        email: newAdmin.email,
-        role: newAdmin.role
-      }
-    });
+    res.status(201).json(newUser);
 
-  } catch (error) {
-    console.error("Register Admin Error:", error);
-    res.status(500).json({ message: "Gagal mendaftarkan admin", error: error.message });
+  } catch(error){
+
+    console.log(error);
+
+    res.status(500).json({message:"Server error"});
   }
 };
 
-// --- LOGIN (UMUM: USER & ADMIN) ---
-exports.login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
-    // 1. Cari User berdasarkan email
-    const user = await User.findOne({ where: { email } });
-    if (!user) {
-      return res.status(401).json({ message: "Email atau password salah" });
+// ================= LOGIN =================
+exports.login = async (req,res)=>{
+
+  try{
+
+    const {email,password} = req.body;
+
+    const user = await User.findOne({where:{email}});
+
+    if(!user){
+      return res.status(401).json({message:"Login gagal"});
     }
 
-    // 2. Cek Password
-    const isMatch = await user.matchPassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Email atau password salah" });
+    const match = await bcrypt.compare(password,user.password_hash);
+
+    if(!match){
+      return res.status(401).json({message:"Login gagal"});
     }
 
-    // 3. Generate Token
+    // ambil role name dari tabel roles
+    const roleData = await Role.findOne({
+      where:{id_role:user.id_role}
+    });
+
+    const roleName = roleData ? roleData.role_name : null;
+
     const token = jwt.sign(
-      { id: user.id_user, role: user.role },
+      {id:user.id_user, role:roleName},
       env.JWT_SECRET,
-      { expiresIn: env.JWT_EXPIRES || '1d' }
+      {expiresIn:"1d"}
     );
 
-    res.json({
-      message: "Login berhasil",
-      token,
-      user: {
-        id: user.id_user,
-        nama: user.nama,
-        email: user.email,
-        role: user.role,
-        // Pastikan profile_picture ada jika model mendukungnya, atau default null
-        profile_picture: user.profile_picture || null 
-      }
-    });
+  res.json({
+  token,
+  role: roleName, // tambahkan ini
+  user:{
+    id:user.id_user,
+    username:user.username,
+    email:user.email,
+    role:roleName
+  }
+});
 
-  } catch (error) {
-    console.error("Login Error:", error);
-    res.status(500).json({ message: "Terjadi kesalahan server", error: error.message });
+
+  }catch(err){
+
+    console.log(err);
+
+    res.status(500).json({message:"Server error"});
   }
 };
 
-// --- GET CURRENT USER (ME) ---
-exports.me = async (req, res) => {
-  try {
-    const user = await User.findByPk(req.user.id, {
-      attributes: { exclude: ['password'] }
-    });
 
-    if (!user) return res.status(404).json({ message: "User tidak ditemukan" });
+// DUMMY
+exports.register = async (req,res)=>{
+  res.json({message:"register user"});
+};
 
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ message: "Server Error" });
-  }
+exports.me = async (req,res)=>{
+  res.json(req.user);
 };

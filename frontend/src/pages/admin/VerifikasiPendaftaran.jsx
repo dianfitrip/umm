@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utils/api';
+
 import Swal from 'sweetalert2';
+import api from "../../services/api";
 import { 
   Search, Plus, Eye, Edit2, Trash2, CheckCircle, X, Save, 
   User, Mail, Phone, MapPin, Briefcase, Calendar, Layers 
 } from 'lucide-react';
 import './VerifikasiPendaftaran.css';
+
 
 const VerifikasiPendaftaran = () => {
   const [data, setData] = useState([]);

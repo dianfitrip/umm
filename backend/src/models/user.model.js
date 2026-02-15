@@ -1,6 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/database");
-const bcrypt = require("bcryptjs"); // Pastikan library ini ada
+const bcrypt = require("bcryptjs");
 
 const User = db.define(
   "User",
@@ -10,62 +10,50 @@ const User = db.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    nama: {
+
+    username: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
     },
-    password: {
+
+    password_hash: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    role: {
-      type: DataTypes.ENUM("admin", "asesor", "asesi", "tuk"),
-      defaultValue: "asesi",
+
+    id_role: {
+      type: DataTypes.INTEGER,
     },
-    is_active: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
-    },
-    profile_picture: {
+
+    no_hp: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+
+    status_user: {
+      type: DataTypes.STRING,
+      defaultValue: "aktif",
+    },
+
+    created_at: {
+      type: DataTypes.DATE,
     },
   },
   {
     tableName: "users",
-    timestamps: true, // Sesuai dengan created_at dan updated_at di SQL Anda
-    hooks: {
-      // Enkripsi password sebelum disimpan (Register)
-      beforeCreate: async (user) => {
-        if (user.password) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      },
-      // Enkripsi password jika diubah (Update Profile)
-      beforeUpdate: async (user) => {
-        if (user.changed("password")) {
-          const salt = await bcrypt.genSalt(10);
-          user.password = await bcrypt.hash(user.password, salt);
-        }
-      },
-    },
+    timestamps: false,
   }
 );
 
-// =================================================================
-// BAGIAN PENTING INI YANG SEBELUMNYA HILANG:
-// =================================================================
+// fungsi cek password
 User.prototype.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  return await bcrypt.compare(enteredPassword, this.password_hash);
 };
 
 module.exports = User;

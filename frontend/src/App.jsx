@@ -1,15 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-// import "./App.css";  <-- Hapus atau jadikan komentar
-import "./index.css"; // Pastikan file css global (biasanya index.css) tetap ada jika dibutuhkan
+import "./index.css";
 
 import Login from "./pages/public/Login";
 import LoginAdmin from "./pages/auth/LoginAdmin";
-import PendaftaranAsesi from "./pages/public/Registration"; 
+import PendaftaranAsesi from "./pages/public/Registration";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import VerifikasiPendaftaran from "./pages/admin/VerifikasiPendaftaran";
 import DashboardAsesi from "./pages/public/Profile";
 
 function App() {
+
   const isAuthenticated = () => {
     return localStorage.getItem("token") !== null;
   };
@@ -24,24 +25,29 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* --- PUBLIC ROUTES --- */}
-        <Route path="/login" element={<Login />} />
-        
-        {/* --- ADMIN LOGIN ROUTE --- */}
-        <Route path="/admin/login" element={<LoginAdmin />} /> 
 
+        {/* PUBLIC */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin/login" element={<LoginAdmin />} />
         <Route path="/pendaftaran" element={<PendaftaranAsesi />} />
 
-        {/* --- PROTECTED ROUTES --- */}
-        <Route 
-          path="/admin/dashboard" 
+        {/* ADMIN LAYOUT */}
+        <Route
+          path="/admin"
           element={
             <ProtectedRoute>
               <AdminDashboard />
             </ProtectedRoute>
-          } 
-        />
+          }
+        >
 
+          {/* child routes */}
+          <Route path="dashboard" element={<div />} />
+          <Route path="verifikasi-pendaftaran" element={<VerifikasiPendaftaran />} />
+
+        </Route>
+
+        {/* USER DASHBOARD */}
         <Route
           path="/dashboard/*"
           element={
@@ -51,9 +57,8 @@ function App() {
           }
         />
 
-        {/* --- REDIRECTS --- */}
         <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<div className="text-center mt-10">404 Not Found</div>} />
+
       </Routes>
     </Router>
   );

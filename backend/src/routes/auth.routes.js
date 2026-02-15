@@ -8,6 +8,7 @@ const authMiddleware = require("../middlewares/auth.middleware");
 // console.log("Register Admin Fn:", authController.registerAdmin); 
 // console.log("Middleware Fn:", authMiddleware.authenticate);
 
+
 router.post("/register", authController.register);
 router.post("/login", authController.login);
 
